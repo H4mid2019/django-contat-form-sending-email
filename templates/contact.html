@@ -33,23 +33,14 @@
         {% comment %} <textarea name="text" class="validate[required,length[6,300]] feedback-input" id="comment" placeholder="Comment"></textarea> {% endcomment %}
       </p>
       
-      <div style="display:none;visibility: hidden;">
-						{{ form.user_info }}
-			</div>
+
       <div class="submit">
         <input type="submit" value="SEND" id="button-blue"/>
         <div class="ease"></div>
       </div>
     </form>
   </div>
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script>
-  <script>
-window.onload = function() {
-    $.getJSON('https://ipapi.co/json/', function(data) {
-		document.getElementById("id_user_info").value = data.ip + '/' + data.country_name + '/' + data.city + '/' + data.org;
-        });
-    };
-</script>
+
 <!-- partial -->
   
 </body>

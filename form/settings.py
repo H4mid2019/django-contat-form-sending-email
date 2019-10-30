@@ -25,7 +25,7 @@ SECRET_KEY = 'yd-*9@%d7t6cijx9(-@++k3g=23rf!e(dr(kup8m@7xs@9#^ea'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -39,6 +39,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'contact.apps.ContactConfig',
 ]
+
+EMAIL_HOST = 'smtp.sender.com'
+EMAIL_PORT = 25
+EMAIL_HOST_USER = 'sender@site.com'
+EMAIL_HOST_PASSWORD = 'supersecretpass'
+# EMAIL_USE_SSL = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

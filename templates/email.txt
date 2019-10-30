@@ -1,0 +1,2 @@
+New contact from {{ name }} with {{ email }} address .
+comment : {{ comment }}

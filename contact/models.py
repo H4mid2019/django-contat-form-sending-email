@@ -14,3 +14,14 @@ class Contact(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class EmailSetting(models.Model):
+    recipients_email = models.TextField(
+        default="admin@site.com,admin2@site.com", help_text="Please be sure to sepreate emails with ( , ).")
+    subject = models.CharField(max_length=150, default="New contact form")
+    from_email = models.EmailField(
+        max_length=254, default="donotreply@site.com")
+
+    def __str__(self):
+        return self.subject

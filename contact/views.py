@@ -1,26 +1,22 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpRequest
 from .forms import ContactReciver
+from .models import EmailSetting
 from datetime import datetime
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-import smtplib
-
-n = []
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
 
 
 def index(request):
-    global n
+    n = []
     if request.method == 'POST':
         form = ContactReciver(request.POST)
         if form.is_valid():
             ins = form.save(commit=False)
             ins.created_date = datetime.now()
-            n.append(request.POST.get('name'))
-            n.append(request.POST.get('email'))
-            n.append(request.POST.get('comment'))
+            ins.user_info = request.META['REMOTE_ADDR']
             ins.save()
-            sendit(n)
+            sendit(ins.name, ins.email, ins.comment)
             return redirect('contact:index')
 
         else:
@@ -32,16 +28,17 @@ def index(request):
 
 
 # change this part by your settings
-def sendit(name):
-    mm = '-'.join(name)
-    message = MIMEMultipart()
-    message["from"] = 'info@foo.com'
-    message["to"] = 'john@gmail.com'
-    message["subject"] = 'Hello Wolrd'
-    message.attach(MIMEText(mm))
-
-    with smtplib.SMTP(host='mail.foo.com', port=26) as smtp:
-        smtp.ehlo()
-        # smtp.starttls() # uncomment for tls connection
-        smtp.login('username', 'secretpass')
-        smtp.send_message(message)
+def sendit(name, email, comment):
+    setting = EmailSetting.objects.get(id=1)
+    msg_plain = render_to_string(
+        'email.txt', {'name': name, 'email': email, 'comment': comment})
+    msg_html = render_to_string(
+        'email.html', {'name': name, 'email': email, 'comment': comment})
+    send_mail(
+        subject=setting.subject,
+        message=msg_plain,
+        from_email=setting.from_email,
+        recipient_list=[setting.recipients_email, ],
+        html_message=msg_html,
+        fail_silently=False,
+    )
